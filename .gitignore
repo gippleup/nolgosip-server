@@ -2,3 +2,5 @@
 
 package-lock.json
 .env
+deploy.sh
+__test__/
