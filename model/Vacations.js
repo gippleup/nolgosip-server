@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
   const vacation = sequelize.define(
-    'vacation', {
+    'vacations', {
       from: {
         type: DataTypes.DATE,
         allowNull: false,

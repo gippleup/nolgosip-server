@@ -2,12 +2,8 @@ const crypto = require('crypto');
 
 module.exports = (sequelize, DataTypes) => {
   const user = sequelize.define(
-    'user', {
+    'users', {
       auth: DataTypes.STRING,
-      usedVacation: {
-        type: DataTypes.INTEGER,
-        defaultValue: 0,
-      },
       leftVacation: {
         type: DataTypes.INTEGER,
         defaultValue: 11,
@@ -17,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
         unique: true,
       },
       mobile: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         unique: true,
       },
       password: DataTypes.STRING,
@@ -25,10 +21,9 @@ module.exports = (sequelize, DataTypes) => {
     }, {
       hooks: {
         afterValidate: (data, options) => {
-          const encoded = crypto.createHash('sha1');
-          encoded.update(data.password);
+          // const encoded = crypto.createHash('sha1');
           // eslint-disable-next-line no-param-reassign
-          data.password = encoded.digest('hex');
+          // data.password = encoded.digest('hex');
         },
       },
       charset: 'utf8mb4',
