@@ -6,15 +6,28 @@ const util = {
     findOne(model, options) {
       return model.findOne(options)
         .then((data) => {
-          if (data) return data.toJSON();
+          if (data) return data;
           return false;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    findAll(model, options) {
+      return model.findAll(options)
+        .then((data) => {
+          if (data) return data;
+          return false;
+        })
+        .catch((err) => {
+          console.log(err);
         });
     },
   },
   jwt: {
     sign(payload) {
       return jwt.sign({
-        exp: Math.floor(Date.now() / 1000 + (0.01 * 60)),
+        exp: Math.floor(Date.now() / 1000 + (30 * 60)),
         data: payload,
       }, config.jwtSecret);
     },
