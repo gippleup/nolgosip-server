@@ -4,7 +4,7 @@ module.exports = (sequelize, DataTypes) => {
   const user = sequelize.define(
     'users', {
       auth: DataTypes.STRING,
-      leftVacation: {
+      totalVacation: {
         type: DataTypes.INTEGER,
         defaultValue: 11,
       },
@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         unique: true,
       },
+      groupId: DataTypes.INTEGER,
       mobile: {
         type: DataTypes.STRING,
         unique: true,
@@ -31,6 +32,11 @@ module.exports = (sequelize, DataTypes) => {
     },
   );
 
-  user.associate = (models) => {};
+  user.associate = (models) => {
+    const { groups, vacations } = models;
+    user.hasMany(vacations);
+    user.belongsTo(groups);
+    groups.hasMany(user);
+  };
   return user;
 };

@@ -19,7 +19,6 @@ module.exports = (sequelize, DataTypes) => {
       },
       approver: {
         type: DataTypes.STRING,
-        defaultValue: 'admin',
       },
       reason: {
         type: DataTypes.STRING,
@@ -32,6 +31,10 @@ module.exports = (sequelize, DataTypes) => {
     },
   );
 
-  vacation.associate = (models) => {};
+  vacation.associate = (models) => {
+    const { users } = models;
+    users.hasMany(vacation);
+    vacation.belongsTo(users);
+  };
   return vacation;
 };
