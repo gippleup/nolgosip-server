@@ -20,23 +20,25 @@ module.exports = async (req, res) => {
     },
   });
 
-  const validLogin = existingUser ? existingUser.password === password : false;
+  const userJSON = existingUser.toJSON();
+  const validLogin = userJSON ? userJSON.password === password : false;
   if (validLogin) {
-    const token = await utils.jwt.sign(existingUser.email);
-    const auth = await utils.jwt.sign(existingUser.auth);
+    const token = await utils.jwt.sign(userJSON.email);
+    const auth = await utils.jwt.sign(userJSON.auth);
     req.session.accessToken = token;
     req.session.auth = auth;
+    res.cookie('accessToken', token);
     // console.log(req.session);
     const resData = {
-      leftVacation: existingUser.leftVacation,
-      name: existingUser.name,
-      mobile: existingUser.mobile,
-      email: existingUser.email,
-      auth: existingUser.auth,
+      leftVacation: userJSON.leftVacation,
+      name: userJSON.name,
+      mobile: userJSON.mobile,
+      email: userJSON.email,
+      auth: userJSON.auth,
       vacations: [],
     };
     return res.json(resData);
   }
 
-  return res.end('NO DATA');
+  return res.status(404).end('NO DATA');
 };
