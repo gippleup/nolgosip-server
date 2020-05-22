@@ -25,7 +25,7 @@ module.exports = async (req, res) => {
   const existingUser = await utils.sequelize.findOne(db.users, { where: { email } });
 
   if (existingUser) {
-    return res.end('duplicate');
+    return res.status(400).end('duplicate');
   }
 
   const values = {
