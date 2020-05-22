@@ -5,7 +5,11 @@ require('dotenv').config({
   path: envPath,
 });
 
-const dbHost = process.env.DB_HOST;
+const devEnv = process.env.DEV_ENV;
+
+const dbHost = devEnv === 'DEVELOPMENT'
+  ? process.env.DB_HOST_DEVELOPMENT
+  : process.env.DB_HOST_PRODUCTION;
 const dbPass = process.env.DB_PASS;
 const dbPort = process.env.DB_PORT;
 
