@@ -16,15 +16,13 @@ module.exports = async (req, res) => {
     return res.status(400).end('INVALID INPUT');
   }
 
-  const tableIsEmpty = await utils.sequelize.findOne(db.users, { where: {} }) === false;
+  const allUsers = await utils.sequelize.findAll(db.users, { where: {} });
+  const usersJSON = allUsers.map((el) => el.toJSON());
+  const tableIsEmpty = usersJSON.length === 0;
 
-  const createUser = (values) => db.users.create(values);
+  const createUser = async (values) => db.users.create(values);
 
-  const existingUser = await utils.sequelize.findOne(db.users, {
-    where: {
-      email,
-    },
-  });
+  const existingUser = await utils.sequelize.findOne(db.users, { where: { email } });
 
   if (existingUser) {
     return res.end('duplicate');
@@ -37,15 +35,11 @@ module.exports = async (req, res) => {
     mobile,
   };
 
+
   values.auth = tableIsEmpty ? 'admin' : 'user';
 
-  return createUser(values)
-    .then((data) => {
-      // res.send(data.toJSON());
-      res.end('ok');
-    })
-    .catch((err) => {
-      const errors = err.errors.map((error) => error.message);
-      res.send(errors.join('\n'));
-    });
+  const newUser = await createUser(values)
+    .catch((err) => setTimeout(()=>{console.log(err)}, 1000));
+
+  return res.json(newUser);
 };
