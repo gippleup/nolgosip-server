@@ -19,15 +19,21 @@ app.use(cors({
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+
+// Custom middleware
 app.use((req, res, next) => {
   res.db = db;
+  res.endWithMessage = (statusCode, message) => {
+    res.statusCode = statusCode;
+    res.statusMessage = message;
+    res.end(message);
+  };
   next();
 });
 
 app.use(session(config.session));
 
 app.use('/', router);
-
 
 app.listen(PORT, () => {
   console.log(`app started listening from PORT ${PORT}`);
