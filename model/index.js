@@ -53,33 +53,38 @@ sequelize.sync({
   .then((session) => {
     admin = session;
     sampleData.map(async (data, i) => {
-      await new Promise((resolve) => setTimeout(() => {
-        resolve('ok');
-      }, 50 * i));
-      admin.post(localUrl('group'), {
-        type: 'create',
-        name: data.group,
-      })
-        .then(() => admin.post(localUrl('users'), {
-          type: 'setGroup',
-          groupName: data.group,
-          userEmail: data.email,
-        }))
-        .then(() => createSession(data))
-        .then((user) => user.post(localUrl('vacation'), {
+      try {
+        await new Promise((resolve) => setTimeout(() => {
+          resolve('ok');
+        }, 50 * i));
+        if (data.group) {
+          await admin.post(localUrl('group'), {
+            type: 'create',
+            name: data.group,
+          });
+          await admin.post(localUrl('users'), {
+            type: 'setGroup',
+            groupName: data.group,
+            userEmail: data.email,
+          });
+        }
+        const user = await createSession(data);
+        await user.post(localUrl('vacation'), {
           type: 'request',
           from: data.vacations[0] ? Date.parse(data.vacations[0].from) : '',
           to: data.vacations[0] ? Date.parse(data.vacations[0].to) : '',
           reason: '그냥',
-        }))
-        .then(() => admin.post(localUrl('users'), {
+        });
+        await admin.post(localUrl('users'), {
           type: 'setAuth',
           auth: data.auth,
           email: data.email,
-        }))
-        .catch((err) => {
-          throw err;
         });
+      } catch (err) {
+        const { config, status, statusText } = err.response;
+        const { url, method, data } = config;
+        console.log({ status, statusText, url, method, data: JSON.parse(data) });
+      }
     });
   });
 

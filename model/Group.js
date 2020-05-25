@@ -6,7 +6,8 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      managerId: DataTypes.STRING,
+      managerId: DataTypes.INTEGER,
+      companyId: DataTypes.INTEGER,
     },
     {
       charset: 'utf8mb4',
@@ -15,7 +16,8 @@ module.exports = (sequelize, DataTypes) => {
   );
 
   groups.associate = (models) => {
-    const { users } = models;
+    const { users, companies } = models;
+    groups.belongsTo(companies);
     groups.hasMany(users);
     users.belongsTo(groups);
   };

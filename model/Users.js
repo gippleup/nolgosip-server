@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
         unique: true,
       },
       groupId: DataTypes.INTEGER,
+      companyId: DataTypes.INTEGER,
       mobile: {
         type: DataTypes.STRING,
         unique: true,
@@ -33,9 +34,10 @@ module.exports = (sequelize, DataTypes) => {
   );
 
   user.associate = (models) => {
-    const { groups, vacations } = models;
+    const { groups, vacations, companies } = models;
     user.hasMany(vacations);
     user.belongsTo(groups);
+    user.belongsTo(companies);
     groups.hasMany(user);
   };
   return user;
