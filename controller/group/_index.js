@@ -15,17 +15,17 @@ module.exports = {
       return decoded.data;
     });
 
-    if (!token) return res.end('INVALID TOKEN');
+    if (!token) return res.endWithMessage(400, 'INVALID TOKEN');
 
     const curUser = await utils.sequelize.findOne(db.users, { where: { email: token } });
     const userJSON = curUser.toJSON();
 
-    if (userJSON.auth !== 'admin') return res.end('UNAUTHORIZED USER');
+    if (userJSON.auth !== 'admin') return res.endWithMessage(400, 'UNAUTHORIZED REQUEST');
 
     if (type === 'create') return createGroup(req, res);
     if (type === 'delete') return deleteGroup(req, res);
     if (type === 'modify') return modifyGroup(req, res);
 
-    return res.end('UNHANDLED REQUEST');
+    return res.endWithMessage(400, 'UNHANDLED REQUEST');
   },
 };

@@ -6,7 +6,7 @@ module.exports = async (req, res) => {
     if (err) return false;
     return decoded.data;
   });
-  if (!auth || auth !== 'admin') return res.end('UNAUTHORIZED REQUEST');
+  if (!auth || auth !== 'admin') return res.endWithMessage(400, 'UNAUTHORIZED REQUEST');
 
   const query = `
   SELECT 
@@ -16,10 +16,11 @@ module.exports = async (req, res) => {
     U.name as userName, 
     U.auth, 
     U.email, 
-    U.mobile
+    U.mobile,
+    U.totalVacation
   FROM 
     users AS U
-  INNER JOIN 
+  LEFT JOIN 
     groups AS G 
       ON G.id = U.groupId;
   `;

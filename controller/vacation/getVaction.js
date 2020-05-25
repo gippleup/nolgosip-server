@@ -10,20 +10,19 @@ module.exports = async (req, res, userJSON) => {
     to,
   } = req.body;
 
-  if (!target) return res.status(400).end('TARGET IS NOT SPECIFIED');
-  if (!email) return res.status(400).end('TARGET EMAIL IS NOT SPECIFIED');
-  if (!from) return res.status(400).end('SPAN IS NOT SPECIFIED');
-  if (!to) return res.status(400).end('SPAN IS NOT SPECIFIED');
+  if (!target) return res.endWithMessage(400, 'TARGET IS NOT SPECIFIED');
+  if (!from) return res.endWithMessage(400, 'SPAN IS NOT SPECIFIED');
+  if (!to) return res.endWithMessage(400, 'SPAN IS NOT SPECIFIED');
 
   const token = await utils.jwt.verify(req.session.accessToken, (err, decoded) => {
     if (err) return false;
     return decoded.data;
   });
 
-  if (!token) return res.end('INVALID TOKEN');
+  if (!token) return res.endWithMessage(400, 'INVALID TOKEN');
 
-  if (target === 'team') return getTeamVacation(req, res, token);
-  if (target === 'user') return getUserVacation(req, res, token);
+  if (target === 'team') return getTeamVacation(req, res, userJSON);
+  if (target === 'user') return getUserVacation(req, res, userJSON);
 
-  return res.end('UNHANDLED REQUEST');
+  return res.endWithMessage(400, 'UNHANDLED REQUEST');
 };

@@ -3,24 +3,24 @@ const utils = require('../utils');
 module.exports = async (req, res) => {
   const { db } = res;
   const { groupName, userEmail } = req.body;
-  if (!groupName || !userEmail) return res.end('INVALID INPUT');
+  if (!groupName || !userEmail) return res.endWithMessage(400, 'INVALID INPUT');
 
   const token = await utils.jwt.verify(req.session.accessToken, (err, decoded) => {
     if (err) return false;
     return decoded.data;
   });
 
-  if (!token) return res.end('INVALID TOKEN');
+  if (!token) return res.endWithMessage(400, 'INVALID TOKEN');
 
   const curUser = await utils.sequelize.findOne(db.users, { where: { email: token } });
-  if (!curUser) return res.end("REQUESTING USER DOESN'T EXIST");
-  if (curUser.toJSON().auth !== 'admin') return res.end('UNAUTHORIZED USER');
+  if (!curUser) return res.endWithMessage("REQUESTING USER DOESN'T EXIST");
+  if (curUser.toJSON().auth !== 'admin') return res.endWithMessage(400, 'UNAUTHORIZED USER');
 
   const group = await utils.sequelize.findOne(db.groups, { where: { name: groupName } });
-  if (!group) return res.end("SUCH GROUP DOESN'T EXIST");
+  if (!group) return res.endWithMessage(400, "SUCH GROUP DOESN'T EXIST");
 
   const targetUser = await utils.sequelize.findOne(db.users, { where: { email: userEmail } });
-  if (!targetUser) return res.end('NO SUCH USER');
+  if (!targetUser) return res.endWithMessage(400, 'NO SUCH USER');
   const userJSON = targetUser.toJSON();
 
   if (userJSON.auth === 'manager') {

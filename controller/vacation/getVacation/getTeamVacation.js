@@ -1,12 +1,12 @@
 const { Op } = require('sequelize');
 
-module.exports = async (req, res, token) => {
+module.exports = async (req, res, userJSON) => {
   const { db } = res;
   const { email, from, to } = req.body;
 
   const curUser = await db.users.findOne({
     where: {
-      email: token,
+      email: userJSON.email,
     },
     include: db.groups,
   });
@@ -22,7 +22,9 @@ module.exports = async (req, res, token) => {
       include: db.groups,
     });
 
-    if (!targetUser) return res.end('NO SUCH USER');
+    if (!email) return res.endWithMessage(400, 'TARGET EMAIL IS NOT SPECIFIED');
+
+    if (!targetUser) return res.endWithMessage(400, 'NO SUCH USER');
     targetUserJSON = targetUser.toJSON();
     whereClause = `WHERE U.groupId = ${targetUserJSON.groupId}`;
   }

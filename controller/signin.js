@@ -10,17 +10,16 @@ module.exports = async (req, res) => {
     password,
   } = req.body;
 
-  if (!email || !password) {
-    return res.status(400).end('INVALID INPUT');
-  }
+  if (!email || !password) return res.endWithMessage(400, 'INVALID INPUT');
 
   const existingUser = await db.users.findOne({
     where: {
       email,
     },
+    include: db.companies,
   });
 
-  if (!existingUser) return res.status(400).end('NO SUCH USER');
+  if (!existingUser) return res.endWithMessage(400, 'NO SUCH USER');
   const userJSON = existingUser.toJSON();
 
   const validLogin = userJSON.password === password;
@@ -33,6 +32,7 @@ module.exports = async (req, res) => {
       sameSite: 'none',
     });
     // console.log(req.session);
+    console.log(userJSON);
     const resData = {
       leftVacation: userJSON.leftVacation,
       name: userJSON.name,
@@ -44,5 +44,5 @@ module.exports = async (req, res) => {
     return res.json(resData);
   }
 
-  return res.status(404).end('NO ACTION');
+  return res.endWithMessage(404, 'NO SUCH USER');
 };

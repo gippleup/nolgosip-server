@@ -3,7 +3,7 @@ module.exports = async (req, res, userJSON) => {
   const { vacationId } = req.body;
   const { auth } = userJSON;
 
-  if (!vacationId) return res.end('VACATION ID REQUIRED');
+  if (!vacationId) return res.endWithMessage(400, 'VACATION ID REQUIRED');
 
   const targetVacation = await db.vacations.findOne({ where: { id: vacationId } });
   const vacationJSON = targetVacation.toJSON();
@@ -15,7 +15,7 @@ module.exports = async (req, res, userJSON) => {
   }
 
   if (userJSON.id !== vacationJSON.userId) {
-    if (auth !== 'admin' && auth !== 'manager') return res.end('UNAUTHORIZED REQUEST');
+    if (auth !== 'admin' && auth !== 'manager') return res.endWithMessage(400, 'UNAUTHORIZED REQUEST');
     targetVacation.status = 'declined';
     await targetVacation.save();
     return res.json(targetVacation);

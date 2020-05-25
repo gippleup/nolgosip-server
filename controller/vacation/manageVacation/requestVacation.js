@@ -5,7 +5,7 @@ module.exports = async (req, res, userJSON) => {
   const { from, to, reason } = req.body;
   const { db } = res;
 
-  if (!from || !to || !reason) return res.end('INVALID INPUT');
+  if (!from || !to || !reason) return res.endWithMessage(400, 'INVALID INPUT');
 
   const usedVacations = await db.vacations.findAll({
     where: {
@@ -26,7 +26,7 @@ module.exports = async (req, res, userJSON) => {
     (acc, ele) => acc + Date.parse(ele.to) - Date.parse(ele.from), 0,
   );
 
-  if (usedVacationTotal + requestedVacationInMs / 1000 > userJSON.totalVacation * 24 * 60 * 60) return res.end('LIMIT');
+  if (usedVacationTotal + requestedVacationInMs / 1000 > userJSON.totalVacation * 24 * 60 * 60) return res.endWithMessage(400, 'LIMIT');
   const newVacation = await db.vacations.create({
     from,
     to,
