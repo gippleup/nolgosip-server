@@ -64,7 +64,7 @@ module.exports = async (req, res, userJSON) => {
     });
 
   return res.json({
-    groupName: curUserJSON.auth === 'admin' ? 'all' : targetUserJSON.group.name,
+    groupName: curUserJSON.auth === 'admin' ? 'all' : curUserJSON.group.name,
     vacations: vacationData,
   });
 };
