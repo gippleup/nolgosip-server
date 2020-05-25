@@ -7,18 +7,32 @@ require('dotenv').config({
 
 const devEnv = process.env.DEV_ENV;
 
-const dbHost = devEnv === 'DEVELOPMENT'
-  ? process.env.DB_HOST_DEVELOPMENT
-  : process.env.DB_HOST_PRODUCTION;
+const dbHost = process.env.DB_HOST;
 const dbPass = process.env.DB_PASS;
 const dbPort = process.env.DB_PORT;
+let subDb = '';
+
+if (devEnv === 'TEST') {
+  subDb = process.env.DB_SUBDB_TEST;
+} else if (devEnv === 'DEVELOP') {
+  subDb = process.env.DB_SUBDB_DEVELOPMENT;
+} else {
+  subDb = process.env.DB_SUBDB_PRODUCTION;
+}
 
 const sessionSecret = process.env.SESSION_SECRET;
 
 const jwtSecret = process.env.JWT_SECRET;
 
 module.exports = {
-  db: {
+  mysql: {
+    host: dbHost,
+    user: 'admin',
+    password: dbPass,
+    database: subDb,
+    port: dbPort,
+  },
+  sequelize: {
     define: {
       charset: 'utf8mb4',
       collate: 'utf8mb4_general_ci',
@@ -28,7 +42,7 @@ module.exports = {
     port: dbPort,
     password: dbPass,
     dialect: 'mysql',
-    database: 'develop',
+    database: subDb,
     username: 'admin',
   },
   session: {

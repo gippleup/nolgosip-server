@@ -3,72 +3,61 @@ const { Op } = require('sequelize');
 module.exports = async (req, res, token) => {
   const { db } = res;
   const { email, from, to } = req.body;
-  const group = await db.users.findOne({
+
+  const curUser = await db.users.findOne({
+    where: {
+      email: token,
+    },
+    include: db.groups,
+  });
+
+  const targetUser = await db.users.findOne({
     where: {
       email,
     },
     include: db.groups,
   });
+  if (!targetUser) return res.end('NO SUCH USER');
+  const targetUserJSON = targetUser.toJSON();
 
-  const groupJSON = group.toJSON().group;
+  const curUserJSON = curUser.toJSON();
+  const whereClause = curUserJSON.auth === 'admin' ? '' : `WHERE U.groupId = ${targetUserJSON.groudId}`;
+  const query = `
+    SELECT
+      V.id,
+      V.from,
+      V.to,
+      V.status,
+      V.approver,
+      V.reason,
+      V.createdAt,
+      U.auth,
+      U.email,
+      U.mobile,
+      U.name as userName
+    FROM
+      vacations as V
+    INNER JOIN
+      users as U on V.userId=U.id
+    ${whereClause}
+  `;
 
-  if (!groupJSON) return res.end('USER HAS NO GROUP');
-
-  // const groupJSON = group.map((item) => {
-  //   const itemJson = item.toJSON();
-  //   return itemJson.group;
-  // });
-
-  // if (!groupJSON.length) return res.end('USER HAS NO GROUP');
-
-  // const eqOption = groupJSON
-  //   ? groupJSON.reduce((acc, data) => Object.assign(acc, { [Op.eq]: data.id }), {})
-  //   : false;
-
-  const vacations = await db.users.findAll({
-    where: {
-      groupId: {
-        [Op.eq]: groupJSON.id,
-      },
-    },
-    include: [db.vacations],
+  const vacations = await new Promise((resolve, reject) => {
+    db.mysql.query(query, (err, data) => {
+      if (err) reject(err);
+      resolve(data);
+    });
   });
 
   const vacationData = vacations
-    .reduce((acc, ele) => acc.concat(ele.toJSON()), [])
-    .filter((data) => data.vacations.length)
-    .map((data) => {
-      const userVacationData = data.vacations;
-      const user = {
-        auth: data.auth,
-        email: data.email,
-        mobile: data.mobile,
-        userName: data.name,
-      };
-
-      const result = userVacationData.map((ele) => {
-        const filteredData = {
-          id: ele.id,
-          from: ele.from,
-          to: ele.to,
-          status: ele.status,
-          approver: ele.approver,
-          reason: ele.reason,
-          createdAt: ele.createdAt,
-        };
-        return Object.assign(filteredData, user);
-      });
-      return result;
-    })
-    .reduce((acc, ele) => acc.concat(ele))
     .filter((ele) => {
       const validFrom = Date.parse(ele.from) - Date.parse(from) > 0;
       const validTo = Date.parse(to) - Date.parse(ele.to) > 0;
       return validFrom && validTo;
     });
 
-  res.json({
-    groupName: groupJSON.name,
+  return res.json({
+    groupName: curUserJSON.auth === 'admin' ? 'all' : curUserJSON.group.name,
     vacations: vacationData,
   });
 };

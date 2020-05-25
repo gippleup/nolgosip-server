@@ -2,8 +2,11 @@ const utils = require('../utils');
 
 module.exports = async (req, res) => {
   const { db } = res;
-  const { groupName, userEmail } = req.body;
-  if (!groupName || !userEmail) return res.end('INVALID INPUT');
+  const { userEmail } = req.body;
+  if (!userEmail) {
+    res.statusMessage = 'INVALID INPUT';
+    return res.end();
+  }
 
   const token = await utils.jwt.verify(req.session.accessToken, (err, decoded) => {
     if (err) return false;
@@ -14,22 +17,24 @@ module.exports = async (req, res) => {
 
   const curUser = await utils.sequelize.findOne(db.users, { where: { email: token } });
   if (!curUser) return res.end("REQUESTING USER DOESN'T EXIST");
-  if (curUser.toJSON().auth !== 'admin') return res.end('UNAUTHORIZED USER');
-
-  const group = await utils.sequelize.findOne(db.groups, { where: { name: groupName } });
-  if (!group) return res.end("SUCH GROUP DOESN'T EXIST");
+  if (curUser.toJSON().auth !== 'admin') return res.end('UNAUTHORIZED REQUEST');
 
   const targetUser = await utils.sequelize.findOne(db.users, { where: { email: userEmail } });
   if (!targetUser) return res.end('NO SUCH USER');
   const userJSON = targetUser.toJSON();
 
   if (userJSON.auth === 'manager') {
-    group.managerId = userJSON.id;
-    group.save();
+    const curGroup = await db.groups.findOne({ where: { id: userJSON.groupId } });
+    curGroup.managerId = null;
+    await curGroup.save();
   }
 
-  targetUser.groupId = group.toJSON().id;
+  targetUser.groupId = null;
   await targetUser.save();
 
-  res.json(targetUser);
+  const newData = targetUser.toJSON();
+
+  const filteredData = utils.objInclude(newData, ['auth', 'email', 'mobile', 'name']);
+
+  return res.json(filteredData);
 };

@@ -1,5 +1,3 @@
-const utils = require('./utils');
-
 module.exports = async (req, res) => {
   const {
     db,
@@ -13,16 +11,19 @@ module.exports = async (req, res) => {
   } = req.body;
 
   if (!email || !name || !password || !mobile) {
-    return res.status(400).end('INVALID INPUT');
+    return res.status(400).send('INVALID INPUT');
   }
 
-  const allUsers = await utils.sequelize.findAll(db.users, { where: {} });
+  const allUsers = await db.users.findAll({ where: {} });
   const usersJSON = allUsers.map((el) => el.toJSON());
   const tableIsEmpty = usersJSON.length === 0;
 
   const createUser = async (values) => db.users.create(values);
 
-  const existingUser = await utils.sequelize.findOne(db.users, { where: { email } });
+  const existingUser = await db.users.findOne({ where: { email } })
+    .catch((err) => {
+      throw err;
+    });
 
   if (existingUser) {
     return res.status(400).end('duplicate');
@@ -38,8 +39,7 @@ module.exports = async (req, res) => {
 
   values.auth = tableIsEmpty ? 'admin' : 'user';
 
-  const newUser = await createUser(values)
-    .catch((err) => setTimeout(()=>{console.log(err)}, 1000));
+  const newUser = await createUser(values);
 
   return res.json(newUser);
 };

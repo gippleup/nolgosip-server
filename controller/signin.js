@@ -14,20 +14,24 @@ module.exports = async (req, res) => {
     return res.status(400).end('INVALID INPUT');
   }
 
-  const existingUser = await utils.sequelize.findOne(db.users, {
+  const existingUser = await db.users.findOne({
     where: {
       email,
     },
   });
 
+  if (!existingUser) return res.status(400).end('NO SUCH USER');
   const userJSON = existingUser.toJSON();
-  const validLogin = userJSON ? userJSON.password === password : false;
+
+  const validLogin = userJSON.password === password;
   if (validLogin) {
     const token = await utils.jwt.sign(userJSON.email);
     const auth = await utils.jwt.sign(userJSON.auth);
     req.session.accessToken = token;
     req.session.auth = auth;
-    res.cookie('accessToken', token);
+    res.cookie('accessToken', token, {
+      sameSite: 'none',
+    });
     // console.log(req.session);
     const resData = {
       leftVacation: userJSON.leftVacation,
@@ -40,5 +44,5 @@ module.exports = async (req, res) => {
     return res.json(resData);
   }
 
-  return res.status(404).end('NO DATA');
+  return res.status(404).end('NO ACTION');
 };

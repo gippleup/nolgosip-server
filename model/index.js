@@ -2,12 +2,17 @@ const { Sequelize } = require('sequelize');
 const fs = require('fs');
 const path = require('path');
 const axios = require('axios').default;
+const mysql = require('mysql');
 const config = require('../config');
 
 const db = {};
+
+const mysqlConnetion = mysql.createConnection(config.mysql);
+mysqlConnetion.connect();
+
 const curFile = path.basename(__filename); // index.js
 
-const sequelize = new Sequelize(config.db);
+const sequelize = new Sequelize(config.sequelize);
 
 const sampleData = require('../__test__/fixtures/users.json');
 
@@ -15,7 +20,6 @@ const localUrl = (route, queryObj) => {
   const baseURL = 'http://localhost:5000';
   const queries = !queryObj ? '' : Object.keys(queryObj).map((key) => `?${key}=${queryObj[key]}`).join('');
   const url = `${baseURL}/${route}${queries}`;
-  console.log(url);
   return url;
 };
 const createSession = async (user) => {
@@ -74,7 +78,7 @@ sequelize.sync({
           email: data.email,
         }))
         .catch((err) => {
-          console.log(err);
+          throw err;
         });
     });
   });
@@ -96,5 +100,6 @@ Object.keys(db).forEach((modelName) => {
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
+db.mysql = mysqlConnetion;
 
 module.exports = db;

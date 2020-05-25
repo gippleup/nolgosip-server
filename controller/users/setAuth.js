@@ -22,7 +22,7 @@ module.exports = async (req, res) => {
 
   existingUser.auth = auth;
   const userJSON = existingUser.toJSON();
-  
+
   if (userJSON.auth === 'manager' && userJSON.groupId) {
     const curGroup = await db.groups.findOne({ where: { id: userJSON.groupId } });
     curGroup.managerId = userJSON.id;

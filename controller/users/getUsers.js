@@ -8,16 +8,28 @@ module.exports = async (req, res) => {
   });
   if (!auth || auth !== 'admin') return res.end('UNAUTHORIZED REQUEST');
 
-  const userList = await utils.sequelize.findAll(db.users, { where: {}, include: [db.groups] });
-  const usersJSON = userList.map((user) => user.toJSON());
-  const filteredData = usersJSON.map((user) => {
-    const filtered = {
-      id: user.id,
-      auth: user.auth,
-      totalVacation: user.totalVacation,
-      email: user.email,
-    };
-    return filtered;
+  const query = `
+  SELECT 
+    G.name as groupName, 
+    G.managerId, 
+    G.id as groupId, 
+    U.name as userName, 
+    U.auth, 
+    U.email, 
+    U.mobile
+  FROM 
+    users AS U
+  INNER JOIN 
+    groups AS G 
+      ON G.id = U.groupId;
+  `;
+
+  const users = await new Promise((resolve, reject) => {
+    db.mysql.query(query, (err, data) => {
+      if (err) reject(err);
+      resolve(data);
+    });
   });
-  return res.json(userList);
+
+  return res.json(users);
 };
