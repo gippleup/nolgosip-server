@@ -11,17 +11,22 @@ module.exports = async (req, res, token) => {
     include: db.groups,
   });
 
-  const targetUser = await db.users.findOne({
-    where: {
-      email,
-    },
-    include: db.groups,
-  });
-  if (!targetUser) return res.end('NO SUCH USER');
-  const targetUserJSON = targetUser.toJSON();
-
+  let whereClause = '';
+  let targetUserJSON = null;
   const curUserJSON = curUser.toJSON();
-  const whereClause = curUserJSON.auth === 'admin' ? '' : `WHERE U.groupId = ${targetUserJSON.groudId}`;
+  if (curUserJSON.auth !== 'admin') {
+    const targetUser = await db.users.findOne({
+      where: {
+        email,
+      },
+      include: db.groups,
+    });
+
+    if (!targetUser) return res.end('NO SUCH USER');
+    targetUserJSON = targetUser.toJSON();
+    whereClause = `WHERE U.groupId = ${targetUserJSON.groupId}`;
+  }
+
   const query = `
     SELECT
       V.id,
@@ -57,7 +62,7 @@ module.exports = async (req, res, token) => {
     });
 
   return res.json({
-    groupName: curUserJSON.auth === 'admin' ? 'all' : curUserJSON.group.name,
+    groupName: curUserJSON.auth === 'admin' ? 'all' : targetUserJSON.group.name,
     vacations: vacationData,
   });
 };
