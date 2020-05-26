@@ -13,7 +13,7 @@ module.exports = async (req, res) => {
   if (!token) return res.endWithMessage(400, 'INVALID TOKEN');
 
   const curUser = await utils.sequelize.findOne(db.users, { where: { email: token } });
-  if (!curUser) return res.endWithMessage("REQUESTING USER DOESN'T EXIST");
+  if (!curUser) return res.endWithMessage(400, "REQUESTING USER DOESN'T EXIST");
   if (curUser.toJSON().auth !== 'admin') return res.endWithMessage(400, 'UNAUTHORIZED USER');
 
   const group = await utils.sequelize.findOne(db.groups, { where: { name: groupName } });
