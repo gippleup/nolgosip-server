@@ -16,10 +16,11 @@ module.exports = (sequelize, DataTypes) => {
   );
 
   groups.associate = (models) => {
-    const { users, companies } = models;
+    const { users, companies, groupUsers } = models;
     groups.belongsTo(companies);
-    groups.hasMany(users);
-    users.belongsTo(groups);
+    groups.belongsToMany(users, {
+      through: groupUsers,
+    });
   };
   return groups;
 };

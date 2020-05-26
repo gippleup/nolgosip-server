@@ -69,12 +69,15 @@ sequelize.sync({
           });
         }
         const user = await createSession(data);
-        await user.post(localUrl('vacation'), {
-          type: 'request',
-          from: data.vacations[0] ? Date.parse(data.vacations[0].from) : '',
-          to: data.vacations[0] ? Date.parse(data.vacations[0].to) : '',
-          reason: '그냥',
+        const vacations = data.vacations.map((vacation) => {
+          return user.post(localUrl('vacation'), {
+            type: 'request',
+            from: Date.parse(vacation.from),
+            to: Date.parse(vacation.to),
+            reason: '그냥',
+          });
         });
+        await Promise.all(vacations);
         await admin.post(localUrl('users'), {
           type: 'setAuth',
           auth: data.auth,

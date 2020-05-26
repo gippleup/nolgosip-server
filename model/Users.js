@@ -34,10 +34,21 @@ module.exports = (sequelize, DataTypes) => {
   );
 
   user.associate = (models) => {
-    const { groups, vacations, companies } = models;
+    const {
+      groups,
+      vacations,
+      companies,
+      groupUsers,
+      companyUsers,
+    } = models;
+
     user.hasMany(vacations);
-    user.belongsTo(groups);
-    user.belongsTo(companies);
+    user.belongsToMany(groups, {
+      through: groupUsers,
+    });
+    user.belongsToMany(companies, {
+      through: companyUsers,
+    });
     groups.hasMany(user);
   };
   return user;
