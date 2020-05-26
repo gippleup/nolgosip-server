@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const router = require('./router/_index');
 const config = require('./config');
-const db = require('./model/index');
+const db = require('./model/_index');
 
 const PORT = process.env.PORT || 5000;
 
@@ -24,9 +24,15 @@ app.use(bodyParser.json());
 app.use((req, res, next) => {
   res.db = db;
   res.endWithMessage = (statusCode, message) => {
-    res.statusCode = statusCode;
-    res.statusMessage = message;
-    res.end(message);
+    if (typeof statusCode === 'string') {
+      res.statusCode = 400;
+      res.statusMessage = statusCode;
+      res.end(statusCode);
+    } else {
+      res.statusCode = statusCode;
+      res.statusMessage = message;
+      res.end(message);
+    }
   };
   next();
 });
