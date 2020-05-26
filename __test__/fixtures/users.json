@@ -1,0 +1,212 @@
+[{
+    "name": "차회장",
+    "email": "a",
+    "mobile": "010-1233-3321",
+    "password": "a",
+    "auth": "admin",
+    "group": "",
+    "vacations": [{
+        "from": "Sun Jun 07 2020 11:28:54 GMT+0900 (GMT+09:00)",
+        "to": "Tue Jun 09 2020 11:28:54 GMT+0900 (GMT+09:00)"
+      },
+      {
+        "from": "Mon Jun 15 2020 11:28:54 GMT+0900 (GMT+09:00)",
+        "to": "Wed Jun 17 2020 11:28:54 GMT+0900 (GMT+09:00)"
+      },
+      {
+        "from": "Mon Apr 01 2020 11:34:04 GMT+0900 (GMT+09:00)",
+        "to": "Fri Apr 04 2020 11:33:18 GMT+0900 (GMT+09:00)"
+      }
+    ]
+  },
+  {
+    "name": "송팀장",
+    "email": "managerSong@gmail.com",
+    "mobile": "010-8756-2158",
+    "password": "1q2w3e4r",
+    "auth": "manager",
+    "group": "백도어1팀",
+    "vacations": [{
+        "from": "Mon Jun 15 2020 11:28:54 GMT+0900 (GMT+09:00)",
+        "to": "Wed Jun 17 2020 11:28:54 GMT+0900 (GMT+09:00)"
+      },
+      {
+        "from": "Mon May 25 2020 11:28:54 GMT+0900 (GMT+09:00)",
+        "to": "Wed May 27 2020 11:28:54 GMT+0900 (GMT+09:00)"
+      }
+    ]
+  },
+  {
+    "name": "백팀장",
+    "email": "managerBaek@gmail.com",
+    "mobile": "010-1548-2158",
+    "password": "1q2w3e4r",
+    "auth": "manager",
+    "group": "트롤2팀",
+    "vacations": [{
+      "from": "Sun Jun 07 2020 11:28:54 GMT+0900 (GMT+09:00)",
+      "to": "Tue Jun 09 2020 11:28:54 GMT+0900 (GMT+09:00)"
+    }]
+  },
+  {
+    "name": "손사원",
+    "email": "employeeSon@gmail.com",
+    "mobile": "010-5151-9191",
+    "password": "1q2w3e4r",
+    "auth": "user",
+    "group": "트롤2팀",
+    "vacations": [{
+      "from": "Wed May 27 2020 11:28:54 GMT+0900 (GMT+09:00)",
+      "to": "Sun May 31 2020 11:28:54 GMT+0900 (GMT+09:00)"
+    }]
+  },
+  {
+    "name": "미사원",
+    "email": "employeeMi@gmail.com",
+    "mobile": "011-5484-5554",
+    "password": "1q2w3e4r",
+    "auth": "user",
+    "group": "트롤2팀",
+    "vacations": [{
+      "from": "Sun Jul 19 2020 11:31:24 GMT+0900 (GMT+09:00)",
+      "to": "Thu Jul 23 2020 11:31:24 GMT+0900 (GMT+09:00)"
+    }]
+  },
+  {
+    "name": "도사원",
+    "email": "employeeDo@gmail.com",
+    "mobile": "011-4321-8485",
+    "password": "1q2w3e4r",
+    "auth": "user",
+    "group": "트롤2팀",
+    "vacations": [{
+      "from": "Tue Jun 30 2020 11:31:24 GMT+0900 (GMT+09:00)",
+      "to": "Sun Jul 05 2020 11:31:24 GMT+0900 (GMT+09:00)"
+    }]
+  },
+  {
+    "name": "래사원",
+    "email": "employeeRae@gmail.com",
+    "mobile": "011-4484-4684",
+    "password": "1q2w3e4r",
+    "auth": "user",
+    "group": "트롤2팀",
+    "vacations": [{
+      "from": "Sun Jun 21 2020 11:31:24 GMT+0900 (GMT+09:00)",
+      "to": "Fri Jun 26 2020 11:31:24 GMT+0900 (GMT+09:00)"
+    }]
+  },
+  {
+    "name": "박사원",
+    "email": "employeePark@gmail.com",
+    "mobile": "011-5488-4684",
+    "password": "1q2w3e4r",
+    "auth": "user",
+    "group": "백도어1팀",
+    "vacations": [{
+      "from": "Tue Jun 30 2020 11:31:24 GMT+0900 (GMT+09:00)",
+      "to": "Sun Jul 05 2020 11:31:24 GMT+0900 (GMT+09:00)"
+    }]
+  },
+  {
+    "name": "콩사원",
+    "email": "employeeKong@gmail.com",
+    "mobile": "011-8484-4684",
+    "password": "1q2w3e4r",
+    "auth": "user",
+    "group": "백도어1팀",
+    "vacations": [{
+      "from": "Sun Jun 21 2020 11:31:24 GMT+0900 (GMT+09:00)",
+      "to": "Fri Jun 26 2020 11:31:24 GMT+0900 (GMT+09:00)"
+    }]
+  },
+  {
+    "name": "병사원",
+    "email": "employeeByung@gmail.com",
+    "mobile": "011-4484-8484",
+    "password": "1q2w3e4r",
+    "auth": "user",
+    "group": "백도어1팀",
+    "vacations": [{
+      "from": "Thu Jun 18 2020 11:33:18 GMT+0900 (GMT+09:00)",
+      "to": "Fri Jun 19 2020 11:33:18 GMT+0900 (GMT+09:00)"
+    }]
+  },
+  {
+    "name": "뇌사원",
+    "email": "employeeBrain@gmail.com",
+    "mobile": "011-4484-5148",
+    "password": "1q2w3e4r",
+    "auth": "user",
+    "group": "백도어1팀",
+    "vacations": [{
+        "from": "Sun May 31 2020 11:33:18 GMT+0900 (GMT+09:00)",
+        "to": "Tue Jun 02 2020 11:33:18 GMT+0900 (GMT+09:00)"
+      },
+      {
+        "from": "Tue Jul 21 2020 11:33:18 GMT+0900 (GMT+09:00)",
+        "to": "Thu Jul 23 2020 11:33:18 GMT+0900 (GMT+09:00)"
+      }
+    ]
+  },
+  {
+    "name": "홍삼원",
+    "email": "employeeHongsam@gmail.com",
+    "mobile": "010-4484-1844",
+    "password": "1q2w3e4r",
+    "auth": "user",
+    "group": "",
+    "vacations": [{
+      "from": "Sun May 31 2020 11:33:18 GMT+0900 (GMT+09:00)",
+      "to": "Tue Jun 02 2020 11:33:18 GMT+0900 (GMT+09:00)"
+    }]
+  },
+  {
+    "name": "즉사원",
+    "email": "employeeJeuk@gmail.com",
+    "mobile": "010-4444-4444",
+    "password": "1q2w3e4r",
+    "auth": "user",
+    "group": "",
+    "vacations": [{
+      "from": "Mon Jun 15 2020 11:34:04 GMT+0900 (GMT+09:00)",
+      "to": "Wed Jun 17 2020 11:34:04 GMT+0900 (GMT+09:00)"
+    }]
+  },
+  {
+    "name": "비명횡사원",
+    "email": "employeeBi@gmail.com",
+    "mobile": "011-5514-1154",
+    "password": "1q2w3e4r",
+    "auth": "user",
+    "group": "",
+    "vacations": [{
+      "from": "Thu Jun 04 2020 11:34:04 GMT+0900 (GMT+09:00)",
+      "to": "Sun Jun 07 2020 11:34:04 GMT+0900 (GMT+09:00)"
+    }]
+  },
+  {
+    "name": "식사원",
+    "email": "employeeSick@gmail.com",
+    "mobile": "010-8484-4444",
+    "password": "1q2w3e4r",
+    "auth": "user",
+    "group": "",
+    "vacations": [{
+      "from": "Mon Jun 01 2020 11:34:04 GMT+0900 (GMT+09:00)",
+      "to": "Sat Jun 06 2020 11:34:04 GMT+0900 (GMT+09:00)"
+    }]
+  },
+  {
+    "name": "나도그룹좀",
+    "email": "employeefdass@gmail.com",
+    "mobile": "010-1141-4444",
+    "password": "1q2w3e4r",
+    "auth": "manager",
+    "group": "",
+    "vacations": [{
+      "from": "Thu Jun 25 2020 11:34:41 GMT+0900 (GMT+09:00)",
+      "to": "Sat Jun 27 2020 11:34:41 GMT+0900 (GMT+09:00)"
+    }]
+  }
+]
