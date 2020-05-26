@@ -25,19 +25,30 @@ app.use(async (req, res, next) => {
   res.db = db;
   const vacations = await db.vacations.findAll({
     where: {
-      status: 'waiting',
+      status: ['waiting', 'approved'],
     },
   });
 
-  const setExpired = vacations.map((vacation) => {
+  const updateStatus = vacations.map((vacation) => {
+    const { status } = vacation;
+    let updatedStatus = '';
     const from = vacation.get('from');
+
     if (Date.parse(from) - Date.now() < 0) {
-      // eslint-disable-next-line no-param-reassign
-      vacation.status = 'expired';
+      if (status === 'waiting') {
+        updatedStatus = 'expired';
+      }
+      if (status === 'approved') {
+        updatedStatus = 'complete';
+      }
     }
+
+    // eslint-disable-next-line no-param-reassign
+    vacation.status = updatedStatus;
     return vacation.save();
   });
-  await Promise.all(setExpired);
+
+  await Promise.all(updateStatus);
 
   res.endWithMessage = (statusCode, message) => {
     if (typeof statusCode === 'string') {
