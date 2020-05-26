@@ -13,19 +13,6 @@ module.exports = async (req, res, userJSON) => {
   if (!email) return res.status(400).end('TARGET EMAIL IS NOT SPECIFIED');
   if (!targetUser) return res.status(404).end('NO SUCH USER');
 
-  const usedForUser = {
-    used: [],
-    approved: [],
-    waiting: [],
-    expired: [],
-    sum: {
-      used: 0,
-      approved: 0,
-      waiting: 0,
-      expired: 0,
-    },
-  };
-
   const targetUserJSON = targetUser.toJSON();
   const vacationData = await db.vacations.findAll({
     attributes: ['id', 'from', 'to', 'status', 'reason', 'createdAt'],
@@ -82,6 +69,7 @@ module.exports = async (req, res, userJSON) => {
 
   res.json({
     userName: targetUserJSON.name,
-    vacations: filteredVacationData,
+    vacations: vacationsJSON,
+    filteredVacations: filteredVacationData,
   });
 };
