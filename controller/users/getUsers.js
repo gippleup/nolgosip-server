@@ -82,7 +82,9 @@ module.exports = async (req, res) => {
     users AS U
   LEFT JOIN 
     groups AS G 
-      ON G.id = U.groupId;
+      ON G.id = U.groupId
+  ORDER BY
+    U.auth
   `;
 
   const users = await new Promise((resolve, reject) => {
