@@ -32,7 +32,6 @@ module.exports = async (req, res) => {
       sameSite: 'none',
     });
     // console.log(req.session);
-    console.log(userJSON);
     const resData = {
       leftVacation: userJSON.leftVacation,
       name: userJSON.name,
