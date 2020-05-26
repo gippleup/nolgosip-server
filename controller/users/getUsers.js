@@ -30,15 +30,17 @@ module.exports = async (req, res) => {
 
   usedVacations.forEach((row) => {
     usedForEach[row.userEmail] = {
-      used: [],
+      complete: [],
       approved: [],
       waiting: [],
+      declined: [],
       expired: [],
       sum: {
-        used: 0,
+        complete: 0,
         approved: 0,
         waiting: 0,
         expired: 0,
+        declined: 0,
       },
     };
   });
@@ -52,34 +54,18 @@ module.exports = async (req, res) => {
   };
 
   usedVacations.forEach((row) => {
-    const {
-      used,
-      approved,
-      waiting,
-      expired,
-      sum,
-    } = usedForEach[row.userEmail];
+    const targetObj = usedForEach[row.userEmail];
 
     Object.assign(row, {
       span: diffInDay(row),
     });
 
-    if (row.status === 'complete') {
-      used.push(filteredRow(row));
-      sum.used += row.span;
-    }
-    if (row.status === 'approved') {
-      approved.push(filteredRow(row));
-      sum.approved += row.span;
-    }
-    if (row.status === 'waiting') {
-      waiting.push(filteredRow(row));
-      sum.waiting += row.span;
-    }
-    if (row.status === 'expired') {
-      expired.push(filteredRow(row));
-      sum.expired += row.span;
-    }
+    const {
+      status,
+    } = row;
+
+    targetObj[status].push(filteredRow(row));
+    targetObj.sum[status] += row.span;
   });
 
   const query = `

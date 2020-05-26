@@ -41,11 +41,10 @@ app.use(async (req, res, next) => {
       if (status === 'approved') {
         updatedStatus = 'complete';
       }
+      // eslint-disable-next-line no-param-reassign
+      vacation.status = updatedStatus;
+      return vacation.save();
     }
-
-    // eslint-disable-next-line no-param-reassign
-    vacation.status = updatedStatus;
-    return vacation.save();
   });
 
   await Promise.all(updateStatus);

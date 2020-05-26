@@ -31,15 +31,17 @@ module.exports = async (req, res, userJSON) => {
     .map((ele) => ele.toJSON());
 
   const filteredVacationData = {
-    used: [],
+    complete: [],
     approved: [],
     waiting: [],
     expired: [],
+    declined: [],
     sum: {
-      used: 0,
+      complete: 0,
       approved: 0,
       waiting: 0,
       expired: 0,
+      decliend: 0,
     },
   };
 
