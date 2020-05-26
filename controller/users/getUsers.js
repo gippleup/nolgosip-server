@@ -16,7 +16,7 @@ module.exports = async (req, res) => {
     INNER JOIN
       vacations as V on V.userId=U.id
     WHERE
-      V.status='complete' OR V.status='waiting' OR V.status='approved'
+      V.status='complete' OR V.status='waiting' OR V.status='approved' OR V.status='expired'
   `;
 
   const usedVacations = await new Promise((resolve, reject) => {
@@ -33,10 +33,12 @@ module.exports = async (req, res) => {
       used: [],
       approved: [],
       waiting: [],
+      expired: [],
       sum: {
         used: 0,
         approved: 0,
         waiting: 0,
+        expired: 0,
       },
     };
   });
@@ -54,6 +56,7 @@ module.exports = async (req, res) => {
       used,
       approved,
       waiting,
+      expired,
       sum,
     } = usedForEach[row.userEmail];
 
@@ -73,9 +76,11 @@ module.exports = async (req, res) => {
       waiting.push(filteredRow(row));
       sum.waiting += row.span;
     }
+    if (row.status === 'expired') {
+      expired.push(filteredRow(row));
+      sum.expired += row.span;
+    }
   });
-
-  console.log(usedForEach);
 
   const query = `
   SELECT 

@@ -21,8 +21,24 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 // Custom middleware
-app.use((req, res, next) => {
+app.use(async (req, res, next) => {
   res.db = db;
+  const vacations = await db.vacations.findAll({
+    where: {
+      status: 'waiting',
+    },
+  });
+
+  const setExpired = vacations.map((vacation) => {
+    const from = vacation.get('from');
+    if (Date.parse(from) - Date.now() < 0) {
+      // eslint-disable-next-line no-param-reassign
+      vacation.status = 'expired';
+    }
+    return vacation.save();
+  });
+  await Promise.all(setExpired);
+
   res.endWithMessage = (statusCode, message) => {
     if (typeof statusCode === 'string') {
       res.statusCode = 400;
