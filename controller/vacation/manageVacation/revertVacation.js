@@ -9,6 +9,8 @@ module.exports = async (req, res, userJSON) => {
   const vacationJSON = targetVacation.toJSON();
   if (!vacationJSON) return res.endWithMessage(400, 'NO SUCH VACATION');
 
+  if (Date.parse(vacationJSON.from) < Date.now()) return res.endWithMessage(400, 'EXPIRED VACATION');
+
   if (auth !== 'admin' && auth !== 'manager') return res.endWithMessage(400, 'UNAUTHORIZED REQUEST');
   targetVacation.status = 'waiting';
   await targetVacation.save();
